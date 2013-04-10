@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
+using Regression;
 
 namespace OrthogonalLinearRegression
 {
@@ -31,16 +26,23 @@ namespace OrthogonalLinearRegression
 
         private void drawLineButton_Click(object sender, EventArgs e)
         {
-            double a, b, c;
+            float a, b, c;
             PixelGrid pixelGrid = pixelGridUserControl.PixelCells;
             int width = pixelGrid.Width;
             int height = pixelGrid.Height;
 
-            Regression.CalculateLineEquation(pixelGrid, 0, 0, width, height, out a, out b, out c);
+            LinearRegression.CalculateLineEquation(pixelGrid, 0, 0, width, height,
+                                                   out a, out b, out c);
 
-            eqnATextBox.Text = a.ToString("f5");
-            eqnBTextBox.Text = b.ToString("f5");
-            eqnCTextBox.Text = c.ToString("f5");
+            eqnATextBox.Text = a.ToString("G7");
+            eqnBTextBox.Text = b.ToString("G7");
+            eqnCTextBox.Text = c.ToString("G7");
+
+            if (!float.IsNaN(a) && !float.IsNaN(b) && !float.IsNaN(c))
+                pixelGridUserControl.DrawLine(a, b, c);
+            else
+                pixelGridUserControl.MakeLineInvalid();
+
         }
     }
 }
