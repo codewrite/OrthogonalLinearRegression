@@ -10,7 +10,7 @@ namespace OrthogonalLinearRegression
     /// </summary>
     public partial class PixelGridUserControl : UserControl
     {
-        const int NUM_PIXELS = 10;
+        const int NUM_PIXELS = 30;
         const float MIN_XY = -0.5f;
         const float MAX_XY = (float)NUM_PIXELS - 0.5f;
 
@@ -28,6 +28,7 @@ namespace OrthogonalLinearRegression
         {
             CreateGrid();
             InitializeComponent();
+            PixlPictureBox_Resize(null, null);
         }
 
         public void DrawLine(float a, float b, float c)
@@ -41,31 +42,6 @@ namespace OrthogonalLinearRegression
         {
             lineValid = false;
             Invalidate();
-        }
-
-        protected override void OnPaint(PaintEventArgs pe)
-        {
-            pe.Graphics.Clear(Color.White);
-
-            for (int x = 0; x < NUM_PIXELS; x++)
-            {
-                for (int y = 0; y < NUM_PIXELS; y++)
-                {
-                    pixelCells.GetCell(x, y).Draw(pe.Graphics);
-                }
-            }
-
-            if (lineValid)
-            {
-                Pen blackPen = new Pen(Color.FromArgb(255, 0, 0, 0), 1);
-                pe.Graphics.DrawLine(blackPen, GetScreenPoint(startPoint), GetScreenPoint(endPoint));
-            }
-        }
-
-        protected override void OnSizeChanged(EventArgs e)
-        {
-            ResizeGrid();
-            base.OnSizeChanged(e);
         }
 
         private Point GetScreenPoint(PointF gridPoint)
@@ -152,7 +128,31 @@ namespace OrthogonalLinearRegression
             }
         }
 
-        private void ResizeGrid()
+        /// <summary>
+        /// Toggle a pixel on or off
+        /// </summary>
+        /// <param name="sender">control that was clicked</param>
+        /// <param name="e">click details</param>
+        private void PixelGridUserControl_MouseClick(object sender, MouseEventArgs e)
+        {
+        }
+
+        private void PixlPictureBox_MouseClick(object sender, MouseEventArgs e)
+        {
+            int width = Size.Width / NUM_PIXELS;
+            int height = Size.Height / NUM_PIXELS;
+
+            int x = e.Location.X / width;
+            int y = e.Location.Y / height;
+
+            if (x >= NUM_PIXELS || y >= NUM_PIXELS)
+                return;
+
+            pixelCells.GetCell(x, y).ToggleCell();
+            pixelCells.GetCell(x, y).InvalidateParent(this);
+        }
+
+        private void PixlPictureBox_Resize(object sender, EventArgs e)
         {
             int width = Size.Width / NUM_PIXELS;
             int height = Size.Height / NUM_PIXELS;
@@ -168,24 +168,23 @@ namespace OrthogonalLinearRegression
             Invalidate();
         }
 
-        /// <summary>
-        /// Toggle a pixel on or off
-        /// </summary>
-        /// <param name="sender">control that was clicked</param>
-        /// <param name="e">click details</param>
-        private void PixelGridUserControl_MouseClick(object sender, MouseEventArgs e)
+        private void PixlPictureBox_Paint(object sender, PaintEventArgs pe)
         {
-            int width = Size.Width / NUM_PIXELS;
-            int height = Size.Height / NUM_PIXELS;
+            pe.Graphics.Clear(Color.White);
 
-            int x = e.Location.X / width;
-            int y = e.Location.Y / height;
+            for (int x = 0; x < NUM_PIXELS; x++)
+            {
+                for (int y = 0; y < NUM_PIXELS; y++)
+                {
+                    pixelCells.GetCell(x, y).Draw(pe.Graphics);
+                }
+            }
 
-            if (x >= NUM_PIXELS || y >= NUM_PIXELS)
-                return;
-
-            pixelCells.GetCell(x, y).ToggleCell();
-            pixelCells.GetCell(x, y).InvalidateParent(this);
+            if (lineValid)
+            {
+                Pen blackPen = new Pen(Color.FromArgb(255, 0, 0, 0), 1);
+                pe.Graphics.DrawLine(blackPen, GetScreenPoint(startPoint), GetScreenPoint(endPoint));
+            }
         }
     }
 }

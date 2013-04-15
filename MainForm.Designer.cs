@@ -1,6 +1,6 @@
 ﻿namespace OrthogonalLinearRegression
 {
-    partial class Form1
+    partial class MainForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
@@ -203,11 +203,11 @@
             this.mainPanel.TabIndex = 4;
             this.mainPanel.Resize += new System.EventHandler(this.mainPanel_Resize);
             // 
-            // pixelGridUserControl1
+            // pixelGridUserControl
             // 
             this.pixelGridUserControl.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.pixelGridUserControl.Location = new System.Drawing.Point(0, 0);
-            this.pixelGridUserControl.Name = "pixelGridUserControl1";
+            this.pixelGridUserControl.Name = "pixelGridUserControl";
             this.pixelGridUserControl.Size = new System.Drawing.Size(256, 256);
             this.pixelGridUserControl.TabIndex = 0;
             // 
@@ -215,6 +215,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(385, 310);
             this.Controls.Add(this.mainPanel);
             this.Controls.Add(this.panel4);

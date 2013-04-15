@@ -18,7 +18,7 @@ namespace RegressionTest
         [TestCase(4, new short[] { 1, 1, 2, 1, 1, 2, 2, 2 })]
         [TestCase(3, new short[] { 0, 0, 0, 2, 2, 0, 2, 2 })]
         [TestCase(10, new short[] { 5, 5, 6, 5, 7, 5, 5, 6, 7, 6, 5, 7, 6, 7, 7, 7 })]
-        public void IndeterminateTest(int size, short[] points)
+        public void SquarePixelPatternGivesIndeterminateLine(int size, short[] points)
         {
             MockPixelGrid pixelGrid = new MockPixelGrid(size, points);
             float a, b, c;
@@ -32,7 +32,7 @@ namespace RegressionTest
         [TestCase(2, new short[] { 0, 0, 1, 1 }, 0.0f)]
         [TestCase(5, new short[] { 1, 0, 2, 1, 3, 2 }, MathHelper.SQRT2DIV2)]
         [TestCase(10, new short[] { 3, 1, 4, 2, 7, 5, 8, 6 }, MathHelper.SQRT2)]
-        public void DiagonalLineTest(int size, short[] points, float expectedC)
+        public void DiagonalLine(int size, short[] points, float expectedC)
         {
             MockPixelGrid pixelGrid = new MockPixelGrid(size, points);
             float a, b, c;
@@ -46,7 +46,7 @@ namespace RegressionTest
         [TestCase(2, new short[] { 0, 0, 0, 1 }, 0.0f)]
         [TestCase(5, new short[] { 2, 0, 2, 1, 2, 2 }, 2.0f)]
         [TestCase(8, new short[] { 4, 1, 4, 2, 4, 5, 4, 6 }, 4.0f)]
-        public void VerticalLineTest(int size, short[] points, float expectedC)
+        public void VerticalLine(int size, short[] points, float expectedC)
         {
             MockPixelGrid pixelGrid = new MockPixelGrid(size, points);
             float a, b, c;
@@ -61,7 +61,8 @@ namespace RegressionTest
         [TestCase(4, new short[] { 0, 3, 1, 3, 2, 3 }, 3.0f)]
         [TestCase(8, new short[] { 0, 7, 4, 7, 5, 7, 6, 7 }, 7.0f)]
         [TestCase(9, new short[] { 0, 3, 1, 3, 2, 4, 3, 4, 4, 4, 5, 4, 6, 3, 7, 3 }, 3.5f)]
-        public void HorizonalLineTest(int size, short[] points, float expectedC)
+        [TestCase(5, new short[] { 0, 0, 1, 0, 2, 1, 3, 0, 4, 0  }, 0.2f)]
+        public void HorizonalLine(int size, short[] points, float expectedC)
         {
             MockPixelGrid pixelGrid = new MockPixelGrid(size, points);
             float a, b, c;
@@ -70,6 +71,21 @@ namespace RegressionTest
 
             MathHelper.NormalizeCoefficientsWithRespectToA(ref a, ref b, ref c);
             TestHelper.AssertABC(a, b, c, 0.0f, 1.0f, expectedC);
+        }
+
+        [TestCase(4, new short[] { 0, 0, 1, 0, 2, 1, 3, 1 }, 0.3826834f, -0.9238795f, 0.1120854f)]
+        [TestCase(3, new short[] { 0, 0, 1, 0, 1, 1, 2, 1 }, 0.5257311f, -0.8506508f, 0.1004057f)]
+        [TestCase(9, new short[] { 3, 2, 4, 2, 4, 3, 5, 3, 5, 4, 6, 4 }, 0.6386358f, -0.7695091f, 0.565334f)]
+        [TestCase(5, new short[] { 1, 3, 2, 2, 2, 3, 3, 1, 3, 2, 4, 1 }, 0.6386358f, 0.7695091f, 3.135608f)]
+        public void MiscellaneousLine(int size, short[] points, float exA, float exB, float exC)
+        {
+            MockPixelGrid pixelGrid = new MockPixelGrid(size, points);
+            float a, b, c;
+            LinearRegression.CalculateLineEquation(pixelGrid, 0, 0, pixelGrid.Width, pixelGrid.Height,
+                                                   out a, out b, out c);
+
+            MathHelper.NormalizeCoefficientsWithRespectToA(ref a, ref b, ref c);
+            TestHelper.AssertABC(a, b, c, exA, exB, exC);
         }
     }
 }

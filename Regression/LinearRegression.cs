@@ -18,6 +18,10 @@ namespace Regression
         /// <param name="a">x coefficeint</param>
         /// <param name="b">y coefficient</param>
         /// <param name="c">Intercept</param>
+        /// <remarks>
+        /// The equation is "normalised" so that A^2 + B^2 = 1.0 and C is positive.
+        /// If the equation of the line cannot be determined A, B and C are set to NaN.
+        /// </remarks>
         public static void CalculateLineEquation(IPixelGrid grid, int x, int y, int width, int height,
                                                  out float a, out float b, out float c)
         {
